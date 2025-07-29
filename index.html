@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tool Aggregator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text */
+            overflow: hidden; /* Prevent body scroll, allow inner divs to scroll */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="w-64 bg-[#202020] flex-shrink-0 p-4 border-r border-[#333] overflow-y-auto shadow-lg rounded-tr-lg rounded-br-lg">
+        <div class="text-xl font-semibold text-white mb-6" id="sidebar-title" data-lang-key="sidebar-title">AI Tools</div>
+        <nav>
+            <ul id="category-list">
+                <!-- Categories will be dynamically loaded here -->
+                <li class="mb-2">
+                    <a href="#" data-category="text-generation" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span data-lang-key="text-generation-category">Text Generation</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="image-generation" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span data-lang-key="image-generation-category">Image Generation</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="code-generation" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        <span data-lang-key="code-generation-category">Code Generation</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="speech-to-text" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <span data-lang-key="speech-to-text-category">Speech-to-Text</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="text-to-speech" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v12m-3 3H9m12-3V9M9 15V9m12 0a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2h4l5 2.5V15z"></path></svg>
+                        <span data-lang-key="text-to-speech-category">Text-to-Speech</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="data-analysis" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M18 21V3M4 12h16"></path></svg>
+                        <span data-lang-key="data-analysis-category">Data Analysis</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="translation" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span data-lang-key="translation-category">Translation</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="summarization" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span data-lang-key="summarization-category">Summarization</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="chatbot" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                        <span data-lang-key="chatbot-category">Chatbot</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="object-detection" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h.01M19 18h.01M12 18h.01M6 12V6a2 2 0 012-2h8a2 2 0 012 2v6m-4 6H8a2 2 0 01-2-2v-4a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2z"></path></svg>
+                        <span data-lang-key="object-detection-category">Object Detection</span>
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="#" data-category="idea-brainstormer" class="flex items-center p-3 rounded-lg text-gray-300 hover:bg-[#333] transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v14m-7 0h14a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span data-lang-key="idea-brainstormer-category">Idea Brainstormer ✨</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto">
+        <div class="flex justify-end mb-4">
+            <label for="language-select" class="text-gray-300 mr-2" data-lang-key="select-language">Select Language:</label>
+            <select id="language-select" class="bg-[#333] text-white p-2 rounded-md">
+                <option value="en" data-lang-key="lang-english">English</option>
+                <option value="te" data-lang-key="lang-telugu">Telugu</option>
+            </select>
+        </div>
+        <div id="tool-preview-container" class="bg-[#282828] rounded-xl shadow-xl p-6 min-h-full flex flex-col justify-between">
+            <h2 id="tool-title" class="text-3xl font-bold text-white mb-4" data-lang-key="welcome-title">Welcome to the AI Tool Aggregator!</h2>
+            <p id="tool-description" class="text-gray-400 mb-8 leading-relaxed" data-lang-key="welcome-description">
+                Select an AI tool from the left sidebar to see its description and interact with its features.
+                This platform helps you explore various AI capabilities in one place.
+            </p>
+
+            <!-- API Usage Disclaimer - REMOVED -->
+
+            <!-- Tool Interaction Area (Dynamically loaded) -->
+            <div id="tool-interaction-area" class="flex-grow flex flex-col">
+                <!-- Content for selected tool will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Place your deployed Google Cloud Function URL here
+        // For example: const BACKEND_URL = "https://your-project-id.cloudfunctions.net/ai-tool-proxy";
+        // For development, you can use your local function URL (e.g., http://localhost:8080)
+        const BACKEND_URL = "YOUR_CLOUD_FUNCTION_URL_HERE"; // Replace this with your actual URL
+
+        // Generic function to call the backend
+        async function callBackend(toolCategory, prompt) {
+            const payload = {
+                tool_category: toolCategory,
+                prompt: prompt
+            };
+
+            try {
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                return result.result; // Return the 'result' key from the backend
+            } catch (error) {
+                console.error(`Error calling backend for ${toolCategory}:`, error);
+                throw error; // Re-throw the error for further processing
+            }
+        }
+
+        // Translations object
+        const translations = {
+            en: {
+                // Sidebar
+                'sidebar-title': 'AI Tools',
+                'text-generation-category': 'Text Generation',
+                'image-generation-category': 'Image Generation',
+                'code-generation-category': 'Code Generation',
+                'speech-to-text-category': 'Speech-to-Text',
+                'text-to-speech-category': 'Text-to-Speech',
+                'data-analysis-category': 'Data Analysis',
+                'translation-category': 'Translation',
+                'summarization-category': 'Summarization',
+                'chatbot-category': 'Chatbot',
+                'object-detection-category': 'Object Detection',
+                'idea-brainstormer-category': 'Idea Brainstormer ✨',
+
+                // Language Selector
+                'select-language': 'Select Language:',
+                'lang-english': 'English',
+                'lang-telugu': 'Telugu',
+
+                // Main Content - Welcome
+                'welcome-title': 'Welcome to the AI Tool Aggregator!',
+                'welcome-description': 'Select an AI tool from the left sidebar to see its description and interact with its features. This platform helps you explore various AI capabilities in one place.',
+
+                // Generic UI elements
+                'enter-prompt': 'Enter your prompt:',
+                'generate-button': 'Generate',
+                'output-label': 'Output:',
+                'output-placeholder': 'Your generated content will appear here.',
+                'input-required': 'Please enter some input to generate content.',
+                'error-occurred': 'An error occurred: ',
+                'generating': 'Generating...',
+
+                // Tool-specific texts
+                'text-generation-description': 'Generate creative text formats like poems, code, scripts, musical pieces, email, letters, etc. based on your input.',
+                'text-generation-placeholder': 'Write a short story about a brave knight and a dragon...',
+                'generate-text-button': 'Generate Text',
+
+                'image-generation-description': 'Create unique images from text descriptions. Describe what you want to see!',
+                'image-generation-placeholder': 'A futuristic city at sunset, cyberpunk style, highly detailed',
+                'generate-image-button': 'Generate Image',
+                'refine-prompt-button': 'Refine Prompt ✨',
+                'image-output-placeholder': 'Your generated image or refined prompt will appear here.',
+                'image-prompt-required': 'Please enter an image prompt.',
+                'prompt-refine-required': 'Please enter a prompt to refine.',
+                'generating-image': 'Generating image...',
+                'refining-prompt': 'Refining prompt...',
+                'refined-prompt-label': 'Refined Prompt:',
+                'generated-image-alt': 'Generated Image',
+                'image-load-error': 'Image Load Error',
+
+                'code-generation-description': 'Generate code snippets, functions, or entire scripts in various programming languages.',
+                'code-generation-placeholder': 'Write a Python function to calculate the factorial of a number.',
+                'generate-code-button': 'Generate Code',
+                'explain-code-button': 'Explain Code ✨',
+                'code-output-placeholder': 'Your generated code or explanation will appear here.',
+                'code-prompt-required': 'Please enter a code prompt.',
+                'code-explain-required': 'Please paste code to explain.',
+                'generating-code': 'Generating code...',
+                'explaining-code': 'Explaining code...',
+                'code-explanation-label': 'Code Explanation:',
+
+                'speech-to-text-description': 'Convert spoken language into written text. (Simulated microphone input)',
+                'speech-to-text-placeholder': 'Type what you would say here...',
+                'simulated-mic-input': 'Simulated Microphone Input:',
+                'start-recording-button': 'Start Recording',
+                'stop-recording-button': 'Stop Recording',
+                'recording-message': 'Recording... Type your simulated speech above.',
+                'transcription-output-label': 'Transcription Output:',
+                'transcription-output-placeholder': 'Your transcribed speech will appear here.',
+                'speech-input-required': 'Please type some simulated speech to transcribe.',
+                'transcribing': 'Transcribing...',
+                'transcribed-text-label': 'Transcribed text:',
+
+                'text-to-speech-description': 'Convert written text into natural-sounding speech.',
+                'text-to-speech-placeholder': 'Enter text to convert to speech: "The quick brown fox jumps over the lazy dog."',
+                'generate-speech-button': 'Generate Speech',
+                'speech-output-placeholder': 'Your generated speech content will appear here.',
+                'speech-text-required': 'Please enter some text to convert to speech.',
+                'generating-speech': 'Generating speech...',
+                'suggest-tone-button': 'Suggest Tone ✨',
+                'tone-suggestion-required': 'Please enter some text to suggest a tone.',
+                'suggesting-tone': 'Suggesting tone...',
+                'suggested-tone-label': 'Suggested Tone:',
+                'audio-generated-message': 'Audio generated for: "{{text}}". (Playback not supported in this demo)',
+
+
+                'data-analysis-description': 'Analyze datasets, identify patterns, and generate insights or summaries.',
+                'data-analysis-placeholder': 'Analyze the following sales data: [100, 120, 90, 150, 110]. What are the trends?',
+                'analyze-data-button': 'Analyze Data',
+                'data-analysis-output-placeholder': 'Your data analysis will appear here.',
+                'data-analysis-required': 'Please enter some data for analysis.',
+                'analyzing-data': 'Analyzing data...',
+                'analysis-result-label': 'Analysis result:',
+                'generate-report-summary-button': 'Generate Report Summary ✨',
+                'report-summary-required': 'Please enter some data to generate a report summary.',
+                'generating-report-summary': 'Generating report summary...',
+                'report-summary-label': 'Report Summary:',
+
+
+                'translation-description': 'Translate text from one language to another.',
+                'translation-placeholder': 'Translate "Hello, how are you?" to Spanish.',
+                'translate-text-button': 'Translate Text',
+                'translation-output-placeholder': 'Your translation will appear here.',
+                'translation-text-required': 'Please enter some text to translate.',
+                'translating': 'Translating...',
+                'translation-label': 'Translation:',
+                'detect-language-button': 'Detect Language ✨',
+                'language-detection-required': 'Please enter some text to detect language.',
+                'detecting-language': 'Detecting language...',
+                'detected-language-label': 'Detected Language:',
+
+                'summarization-description': 'Condense long texts into concise summaries.',
+                'summarization-placeholder': 'Summarize the following article: [Paste a long article text here]',
+                'summarize-text-button': 'Summarize Text',
+                'summary-output-placeholder': 'Your summary will appear here.',
+                'summarization-text-required': 'Please enter some text to summarize.',
+                'summarizing': 'Summarizing...',
+                'summary-label': 'Summary:',
+                'extract-keywords-button': 'Extract Keywords ✨',
+                'keywords-extraction-required': 'Please enter some text to extract keywords.',
+                'extracting-keywords': 'Extracting keywords...',
+                'keywords-label': 'Keywords:',
+
+                'chatbot-description': 'Engage in conversational interactions with an AI assistant.',
+                'chatbot-placeholder': 'Ask me anything...',
+                'chat-with-ai-label': 'Chat with the AI:',
+                'send-message-button': 'Send Message',
+                'chatbot-output-placeholder': 'The chatbot\'s response will appear here.',
+                'chatbot-message-required': 'Please enter a message for the chatbot.',
+                'thinking': 'Thinking...',
+                'chatbot-response-label': 'Chatbot response:',
+                'summarize-conversation-button': 'Summarize Conversation ✨',
+                'conversation-summary-required': 'Please enter some text to summarize the conversation.',
+                'summarizing-conversation': 'Summarizing conversation...',
+                'conversation-summary-label': 'Conversation Summary:',
+
+                'object-detection-description': 'Identify and localize objects within images or video streams.',
+                'object-detection-placeholder': 'This tool would typically involve image upload. For now, imagine you\'re uploading an image of a cat and a dog.',
+                'describe-image-label': 'Describe the image for object detection:',
+                'detect-objects-button': 'Detect Objects',
+                'object-detection-output-placeholder': 'Detected objects will appear here.',
+                'object-detection-required': 'Please describe an image for object detection.',
+                'detecting-objects': 'Detecting objects...',
+                'detected-objects-label': 'Detected objects:',
+                'image-captioning-button': 'Image Captioning ✨',
+                'image-captioning-required': 'Please describe an image to generate a caption.',
+                'generating-image-caption': 'Generating image caption...',
+                'image-caption-label': 'Image Caption:',
+
+                'idea-brainstormer-description': 'Generate creative ideas, solutions, or concepts based on a given topic or problem using AI power.',
+                'idea-brainstormer-placeholder': 'Suggest ideas for a new mobile app that helps with daily productivity.',
+                'enter-topic-label': 'Enter a topic or problem to brainstorm ideas for:',
+                'brainstorm-ideas-button': 'Brainstorm Ideas ✨',
+                'brainstorm-output-placeholder': 'Your brainstormed ideas will appear here.',
+                'brainstorm-topic-required': 'Please enter a topic to brainstorm.',
+                'brainstorming': 'Brainstorming...',
+                'brainstormed-ideas-label': 'Brainstormed Ideas:',
+
+                // Error messages from API functions
+                'error-text-generation': 'Error: Could not generate text. Please try again.',
+                'error-text-generation-connect': 'Error: Failed to connect to the text generation service.',
+                'error-image-generation': 'Error: Could not generate image. Please try again.',
+                'error-image-generation-connect': 'Error: Failed to connect to the image generation service.',
+                'error-refine-prompt': 'Error: Could not refine prompt. Please try again.',
+                'error-refine-prompt-connect': 'Error: Failed to connect to the prompt refinement service.',
+                'error-code-generation': 'Error: Could not generate code. Please try again.',
+                'error-code-generation-connect': 'Error: Failed to connect to the code generation service.',
+                'error-explain-code': 'Error: Could not explain code. Please try again.',
+                'error-explain-code-connect': 'Error: Failed to connect to the code explanation service.',
+                'error-api-unexpected': 'Error: API response was unexpected or empty. Check console for details. Response:',
+                'error-speech-to-text-connect': 'Error: Failed to connect to the speech-to-text service. Please check your network and try again. Details:',
+                'error-text-to-speech': 'Error: Could not convert text to speech. Please try again.',
+                'error-text-to-speech-connect': 'Error: Failed to connect to the text-to-speech service.',
+                'error-data-analysis': 'Error: Could not perform data analysis. Please try again.',
+                'error-data-analysis-connect': 'Error: Failed to connect to the data analysis service.',
+                'error-report-summary': 'Error: Could not generate report summary. Please try again.',
+                'error-report-summary-connect': 'Error: Failed to connect to the report summary service.',
+                'error-translation': 'Error: Could not translate text. Please try again.',
+                'error-translation-connect': 'Error: Failed to connect to the translation service.',
+                'error-detect-language': 'Error: Could not detect language. Please try again.',
+                'error-detect-language-connect': 'Error: Failed to connect to the language detection service.',
+                'error-summarization': 'Error: Could not summarize text. Please try again.',
+                'error-summarization-connect': 'Error: Failed to connect to the summarization service.',
+                'error-extract-keywords': 'Error: Could not extract keywords. Please try again.',
+                'error-extract-keywords-connect': 'Error: Failed to connect to the keyword extraction service.',
+                'error-chatbot': 'Error: Could not get chatbot response. Please try again.',
+                'error-chatbot-connect': 'Error: Failed to connect to the chatbot service.',
+                'error-conversation-summary': 'Error: Could not generate conversation summary. Please try again.',
+                'error-conversation-summary-connect': 'Error: Failed to connect to the conversation summary service.',
+                'error-object-detection': 'Error: Could not perform object detection. Please try again.',
+                'error-object-detection-connect': 'Error: Failed to connect to the object detection service.',
+                'error-image-captioning': 'Error: Could not generate image caption. Please try again.',
+                'error-image-captioning-connect': 'Error: Failed to connect to the image captioning service.',
+                'error-idea-brainstorming': 'Error: Could not brainstorm ideas. Please try again.',
+                'error-idea-brainstorming-connect': 'Error: Failed to connect to the idea brainstorming service.',
+                'tool-not-found': 'Tool Not Found',
+                'select-valid-tool': 'Please select a valid AI tool from the sidebar.'
+            },
+            te: {
+                // Sidebar
+                'sidebar-title': 'AI టూల్స్',
+                'text-generation-category': 'టెక్స్ట్ జనరేషన్',
+                'image-generation-category': 'ఇమేజ్ జనరేషన్',
+                'code-generation-category': 'కోడ్ జనరేషన్',
+                'speech-to-text-category': 'స్పీచ్-టు-టెక్స్ట్',
+                'text-to-speech-category': 'టెక్స్ట్-టు-స్పీచ్',
+                'data-analysis-category': 'డేటా అనాలిసిస్',
+                'translation-category': 'ట్రాన్స్‌లేషన్',
+                'summarization-category': 'సమ్మరైజేషన్',
+                'chatbot-category': 'చాట్‌బాట్',
+                'object-detection-category': 'ఆబ్జెక్ట్ డిటెక్షన్',
+                'idea-brainstormer-category': 'ఐడియా బ్రెయిన్‌స్టార్మర్ ✨',
+
+                // Language Selector
+                'select-language': 'భాషను ఎంచుకోండి:',
+                'lang-english': 'ఇంగ్లీష్',
+                'lang-telugu': 'తెలుగు',
+
+                // Main Content - Welcome
+                'welcome-title': 'AI టూల్ అగ్రిగేటర్‌కు స్వాగతం!',
+                'welcome-description': 'దాని వివరణను చూడటానికి మరియు దాని ఫీచర్లతో ఇంటరాక్ట్ అవ్వడానికి ఎడమ సైడ్‌బార్ నుండి AI టూల్‌ను ఎంచుకోండి. ఈ ప్లాట్‌ఫారమ్ వివిధ AI సామర్థ్యాలను ఒకే చోట అన్వేషించడానికి మీకు సహాయపడుతుంది.',
+
+                // Generic UI elements
+                'enter-prompt': 'మీ ప్రాంప్ట్‌ను నమోదు చేయండి:',
+                'generate-button': 'జనరేట్ చేయండి',
+                'output-label': 'అవుట్‌పుట్:',
+                'output-placeholder': 'మీరు రూపొందించిన కంటెంట్ ఇక్కడ కనిపిస్తుంది.',
+                'input-required': 'కంటెంట్‌ను రూపొందించడానికి దయచేసి కొంత ఇన్‌పుట్‌ను నమోదు చేయండి.',
+                'error-occurred': 'ఒక లోపం సంభవించింది: ',
+                'generating': 'జనరేట్ అవుతోంది...',
+
+                // Tool-specific texts
+                'text-generation-description': 'మీ ఇన్‌పుట్ ఆధారంగా కవితలు, కోడ్, స్క్రిప్ట్‌లు, సంగీత భాగాలు, ఇమెయిల్, లేఖలు మొదలైన సృజనాత్మక టెక్స్ట్ ఫార్మాట్‌లను రూపొందించండి.',
+                'text-generation-placeholder': 'ఒక ధైర్యవంతుడైన నైట్ మరియు డ్రాగన్ గురించి ఒక చిన్న కథ రాయండి...',
+                'generate-text-button': 'టెక్స్ట్ జనరేట్ చేయండి',
+
+                'image-generation-description': 'టెక్స్ట్ వివరణల నుండి ప్రత్యేకమైన చిత్రాలను సృష్టించండి. మీరు ఏమి చూడాలనుకుంటున్నారో వివరించండి!',
+                'image-generation-placeholder': 'సూర్యాస్తమయం సమయంలో ఒక భవిష్యత్ నగరం, సైబర్‌పంక్ స్టైల్, అత్యంత వివరంగా',
+                'generate-image-button': 'చిత్రాన్ని జనరేట్ చేయండి',
+                'refine-prompt-button': 'ప్రాంప్ట్‌ను మెరుగుపరచండి ✨',
+                'image-output-placeholder': 'మీరు రూపొందించిన చిత్రం లేదా మెరుగుపరచబడిన ప్రాంప్ట్ ఇక్కడ కనిపిస్తుంది.',
+                'image-prompt-required': 'దయచేసి చిత్ర ప్రాంప్ట్‌ను నమోదు చేయండి.',
+                'prompt-refine-required': 'మెరుగుపరచడానికి దయచేసి ఒక ప్రాంప్ట్‌ను నమోదు చేయండి.',
+                'generating-image': 'చిత్రం జనరేట్ అవుతోంది...',
+                'refining-prompt': 'ప్రాంప్ట్ మెరుగుపరచబడుతోంది...',
+                'refined-prompt-label': 'మెరుగుపరచబడిన ప్రాంప్ట్:',
+                'generated-image-alt': 'జనరేట్ చేయబడిన చిత్రం',
+                'image-load-error': 'చిత్రం లోడ్ లోపం',
+
+                'code-generation-description': 'వివిధ ప్రోగ్రామింగ్ భాషలలో కోడ్ స్నిప్పెట్‌లు, ఫంక్షన్‌లు లేదా మొత్తం స్క్రిప్ట్‌లను రూపొందించండి.',
+                'code-generation-placeholder': 'ఒక సంఖ్య యొక్క ఫ్యాక్టోరియల్‌ను లెక్కించడానికి పైథాన్ ఫంక్షన్‌ను రాయండి.',
+                'generate-code-button': 'కోడ్‌ను జనరేట్ చేయండి',
+                'explain-code-button': 'కోడ్‌ను వివరించండి ✨',
+                'code-output-placeholder': 'మీరు రూపొందించిన కోడ్ లేదా వివరణ ఇక్కడ కనిపిస్తుంది.',
+                'code-prompt-required': 'దయచేసి కోడ్ ప్రాంప్ట్‌ను నమోదు చేయండి.',
+                'code-explain-required': 'దయచేసి వివరించడానికి కోడ్‌ను అతికించండి.',
+                'generating-code': 'కోడ్ జనరేట్ అవుతోంది...',
+                'explaining-code': 'కోడ్ వివరించబడుతోంది...',
+                'code-explanation-label': 'కోడ్ వివరణ:',
+
+                'speech-to-text-description': 'మాట్లాడే భాషను వ్రాతపూర్వక వచనంగా మార్చండి. (సిమ్యులేటెడ్ మైక్రోఫోన్ ఇన్‌పుట్)',
+                'speech-to-text-placeholder': 'మీరు ఇక్కడ ఏమి చెబుతారో టైప్ చేయండి...',
+                'simulated-mic-input': 'సిమ్యులేటెడ్ మైక్రోఫోన్ ఇన్‌పుట్:',
+                'start-recording-button': 'రికార్డింగ్ ప్రారంభించండి',
+                'stop-recording-button': 'రికార్డింగ్ ఆపండి',
+                'recording-message': 'రికార్డింగ్ అవుతోంది... పైన మీ సిమ్యులేటెడ్ ప్రసంగాన్ని టైప్ చేయండి.',
+                'transcription-output-label': 'ట్రాన్స్‌క్రిప్షన్ అవుట్‌పుట్:',
+                'transcription-output-placeholder': 'మీ ట్రాన్స్‌క్రైబ్ చేయబడిన ప్రసంగం ఇక్కడ కనిపిస్తుంది.',
+                'speech-input-required': 'ట్రాన్స్‌క్రైబ్ చేయడానికి దయచేసి కొంత సిమ్యులేటెడ్ ప్రసంగాన్ని టైప్ చేయండి.',
+                'transcribing': 'ట్రాన్స్‌క్రైబ్ అవుతోంది...',
+                'transcribed-text-label': 'ట్రాన్స్‌క్రైబ్ చేయబడిన టెక్స్ట్:',
+
+                'text-to-speech-description': 'వ్రాతపూర్వక వచనాన్ని సహజంగా వినిపించే ప్రసంగంగా మార్చండి.',
+                'text-to-speech-placeholder': 'ప్రసంగంగా మార్చడానికి వచనాన్ని నమోదు చేయండి: "వేగవంతమైన గోధుమ నక్క సోమరి కుక్కపైకి దూకుతుంది."',
+                'generate-speech-button': 'ప్రసంగాన్ని జనరేట్ చేయండి',
+                'speech-output-placeholder': 'మీరు రూపొందించిన ప్రసంగ కంటెంట్ ఇక్కడ కనిపిస్తుంది.',
+                'speech-text-required': 'ప్రసంగంగా మార్చడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'generating-speech': 'ప్రసంగాన్ని జనరేట్ చేస్తోంది...',
+                'suggest-tone-button': 'టోన్‌ను సూచించండి ✨',
+                'tone-suggestion-required': 'టోన్‌ను సూచించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'suggesting-tone': 'టోన్‌ను సూచిస్తోంది...',
+                'suggested-tone-label': 'సూచించబడిన టోన్:',
+                'audio-generated-message': 'దీని కోసం ఆడియో రూపొందించబడింది: "{{text}}". (ఈ డెమోలో ప్లేబ్యాక్ మద్దతు లేదు)',
+
+                'data-analysis-description': 'డేటాసెట్‌లను విశ్లేషించండి, నమూనాలను గుర్తించండి మరియు అంతర్దృష్టులు లేదా సారాంశాలను రూపొందించండి.',
+                'data-analysis-placeholder': 'కింది అమ్మకాల డేటాను విశ్లేషించండి: [100, 120, 90, 150, 110]. పోకడలు ఏమిటి?',
+                'analyze-data-button': 'డేటాను విశ్లేషించండి',
+                'data-analysis-output-placeholder': 'మీ డేటా విశ్లేషణ ఇక్కడ కనిపిస్తుంది.',
+                'data-analysis-required': 'విశ్లేషణ కోసం దయచేసి కొంత డేటాను నమోదు చేయండి.',
+                'analyzing-data': 'డేటా విశ్లేషించబడుతోంది...',
+                'analysis-result-label': 'విశ్లేషణ ఫలితం:',
+                'generate-report-summary-button': 'రిపోర్ట్ సారాంశాన్ని రూపొందించండి ✨',
+                'report-summary-required': 'రిపోర్ట్ సారాంశాన్ని రూపొందించడానికి దయచేసి కొంత డేటాను నమోదు చేయండి.',
+                'generating-report-summary': 'రిపోర్ట్ సారాంశం రూపొందించబడుతోంది...',
+                'report-summary-label': 'రిపోర్ట్ సారాంశం:',
+
+                'translation-description': 'ఒక భాష నుండి మరొక భాషకు వచనాన్ని అనువదించండి.',
+                'translation-placeholder': '"హలో, మీరు ఎలా ఉన్నారు?" అని స్పానిష్‌లోకి అనువదించండి.',
+                'translate-text-button': 'వచనాన్ని అనువదించండి',
+                'translation-output-placeholder': 'మీ అనువాదం ఇక్కడ కనిపిస్తుంది.',
+                'translation-text-required': 'అనువదించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'translating': 'అనువదిస్తోంది...',
+                'translation-label': 'అనువాదం:',
+                'detect-language-button': 'భాషను గుర్తించండి ✨',
+                'language-detection-required': 'భాషను గుర్తించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'detecting-language': 'భాషను గుర్తిస్తోంది...',
+                'detected-language-label': 'గుర్తించబడిన భాష:',
+
+                'summarization-description': 'పొడవైన వచనాలను సంక్షిప్త సారాంశాలుగా కుదించండి.',
+                'summarization-placeholder': 'కింది కథనాన్ని సంగ్రహించండి: [ఇక్కడ ఒక పొడవైన కథన వచనాన్ని అతికించండి]',
+                'summarize-text-button': 'వచనాన్ని సంగ్రహించండి',
+                'summary-output-placeholder': 'మీ సారాంశం ఇక్కడ కనిపిస్తుంది.',
+                'summarization-text-required': 'సంగ్రహించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'summarizing': 'సంగ్రహిస్తోంది...',
+                'summary-label': 'సారాంశం:',
+                'extract-keywords-button': 'కీలక పదాలను సంగ్రహించండి ✨',
+                'keywords-extraction-required': 'కీలక పదాలను సంగ్రహించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'extracting-keywords': 'కీలక పదాలను సంగ్రహిస్తోంది...',
+                'keywords-label': 'కీలక పదాలు:',
+
+                'chatbot-description': 'AI అసిస్టెంట్‌తో సంభాషణాత్మక పరస్పర చర్యలలో పాల్గొనండి.',
+                'chatbot-placeholder': 'నన్ను ఏదైనా అడగండి...',
+                'chat-with-ai-label': 'AI తో చాట్ చేయండి:',
+                'send-message-button': 'సందేశం పంపండి',
+                'chatbot-output-placeholder': 'చాట్‌బాట్ ప్రతిస్పందన ఇక్కడ కనిపిస్తుంది.',
+                'chatbot-message-required': 'చాట్‌బాట్‌కు సందేశాన్ని నమోదు చేయండి.',
+                'thinking': 'ఆలోచిస్తోంది...',
+                'chatbot-response-label': 'చాట్‌బాట్ ప్రతిస్పందన:',
+                'summarize-conversation-button': 'సంభాషణను సంగ్రహించండి ✨',
+                'conversation-summary-required': 'సంభాషణను సంగ్రహించడానికి దయచేసి కొంత వచనాన్ని నమోదు చేయండి.',
+                'summarizing-conversation': 'సంభాషణ సంగ్రహించబడుతోంది...',
+                'conversation-summary-label': 'సంభాషణ సారాంశం:',
+
+                'object-detection-description': 'చిత్రాలు లేదా వీడియో స్ట్రీమ్‌లలో వస్తువులను గుర్తించండి మరియు గుర్తించండి.',
+                'object-detection-placeholder': 'ఈ టూల్‌కు సాధారణంగా ఇమేజ్ అప్‌లోడ్ అవసరం. ప్రస్తుతానికి, మీరు పిల్లి మరియు కుక్క చిత్రాన్ని అప్‌లోడ్ చేస్తున్నారని ఊహించండి.',
+                'describe-image-label': 'ఆబ్జెక్ట్ డిటెక్షన్ కోసం చిత్రాన్ని వివరించండి:',
+                'detect-objects-button': 'వస్తువులను గుర్తించండి',
+                'object-detection-output-placeholder': 'గుర్తించబడిన వస్తువులు ఇక్కడ కనిపిస్తాయి.',
+                'object-detection-required': 'ఆబ్జెక్ట్ డిటెక్షన్ కోసం దయచేసి ఒక చిత్రాన్ని వివరించండి.',
+                'detecting-objects': 'వస్తువులను గుర్తిస్తోంది...',
+                'detected-objects-label': 'గుర్తించబడిన వస్తువులు:',
+                'image-captioning-button': 'చిత్ర శీర్షిక ✨',
+                'image-captioning-required': 'చిత్ర శీర్షికను రూపొందించడానికి దయచేసి చిత్రాన్ని వివరించండి.',
+                'generating-image-caption': 'చిత్ర శీర్షిక రూపొందించబడుతోంది...',
+                'image-caption-label': 'చిత్ర శీర్షిక:',
+
+                'idea-brainstormer-description': 'ఇచ్చిన అంశం లేదా సమస్య ఆధారంగా సృజనాత్మక ఆలోచనలు, పరిష్కారాలు లేదా భావనలను AI శక్తిని ఉపయోగించి రూపొందించండి.',
+                'idea-brainstormer-placeholder': 'రోజువారీ ఉత్పాదకతకు సహాయపడే కొత్త మొబైల్ యాప్ కోసం ఆలోచనలను సూచించండి.',
+                'enter-topic-label': 'ఆలోచనలను బ్రెయిన్‌స్టార్మ్ చేయడానికి ఒక అంశం లేదా సమస్యను నమోదు చేయండి:',
+                'brainstorm-ideas-button': 'ఆలోచనలను బ్రెయిన్‌స్టార్మ్ చేయండి ✨',
+                'brainstorm-output-placeholder': 'మీ బ్రెయిన్‌స్టార్మ్ చేయబడిన ఆలోచనలు ఇక్కడ కనిపిస్తాయి.',
+                'brainstorm-topic-required': 'బ్రెయిన్‌స్టార్మ్ చేయడానికి దయచేసి ఒక అంశాన్ని నమోదు చేయండి.',
+                'brainstorming': 'బ్రెయిన్‌స్టార్మింగ్...',
+                'brainstormed-ideas-label': 'బ్రెయిన్‌స్టార్మ్ చేయబడిన ఆలోచనలు:',
+
+                // Error messages from API functions
+                'error-text-generation': 'లోపం: టెక్స్ట్ జనరేట్ చేయలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-text-generation-connect': 'లోపం: టెక్స్ట్ జనరేషన్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-image-generation': 'లోపం: చిత్రాన్ని రూపొందించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-image-generation-connect': 'లోపం: చిత్ర జనరేషన్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-refine-prompt': 'లోపం: ప్రాంప్ట్‌ను మెరుగుపరచలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-refine-prompt-connect': 'లోపం: ప్రాంప్ట్ మెరుగుదల సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-code-generation': 'లోపం: కోడ్‌ను రూపొందించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-code-generation-connect': 'లోపం: కోడ్ జనరేషన్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-explain-code': 'లోపం: కోడ్‌ను వివరించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-explain-code-connect': 'లోపం: కోడ్ వివరణ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-api-unexpected': 'లోపం: API ప్రతిస్పందన ఊహించని విధంగా ఉంది లేదా ఖాళీగా ఉంది. వివరాల కోసం కన్సోల్‌ను తనిఖీ చేయండి. ప్రతిస్పందన:',
+                'error-speech-to-text-connect': 'లోపం: స్పీచ్-టు-టెక్స్ట్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది. దయచేసి మీ నెట్‌వర్క్‌ను తనిఖీ చేసి మళ్లీ ప్రయత్నించండి. వివరాలు:',
+                'error-text-to-speech': 'లోపం: వచనాన్ని ప్రసంగంగా మార్చలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-text-to-speech-connect': 'లోపం: టెక్స్ట్-టు-స్పీచ్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-data-analysis': 'లోపం: డేటా విశ్లేషణ చేయలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-data-analysis-connect': 'లోపం: డేటా విశ్లేషణ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-report-summary': 'లోపం: రిపోర్ట్ సారాంశాన్ని రూపొందించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-report-summary-connect': 'లోపం: రిపోర్ట్ సారాంశం సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-translation': 'లోపం: వచనాన్ని అనువదించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-translation-connect': 'లోపం: అనువాద సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-detect-language': 'లోపం: భాషను గుర్తించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-detect-language-connect': 'లోపం: భాష గుర్తింపు సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-summarization': 'లోపం: వచనాన్ని సంగ్రహించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-summarization-connect': 'లోపం: సమ్మరైజేషన్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-extract-keywords': 'లోపం: కీలక పదాలను సంగ్రహించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-extract-keywords-connect': 'లోపం: కీలక పదాల సంగ్రహణ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-chatbot': 'లోపం: చాట్‌బాట్ ప్రతిస్పందనను పొందలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-chatbot-connect': 'లోపం: చాట్‌బాట్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-conversation-summary': 'లోపం: సంభాషణ సారాంశాన్ని రూపొందించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-conversation-summary-connect': 'లోపం: సంభాషణ సారాంశ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-object-detection': 'లోపం: ఆబ్జెక్ట్ డిటెక్షన్ చేయలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-object-detection-connect': 'లోపం: ఆబ్జెక్ట్ డిటెక్షన్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-image-captioning': 'లోపం: చిత్ర శీర్షికను రూపొందించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-image-captioning-connect': 'లోపం: చిత్ర శీర్షిక సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'error-idea-brainstorming': 'లోపం: ఆలోచనలను బ్రెయిన్‌స్టార్మ్ చేయలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
+                'error-idea-brainstorming-connect': 'లోపం: ఆలోచన బ్రెయిన్‌స్టార్మింగ్ సేవకు కనెక్ట్ చేయడంలో విఫలమైంది.',
+                'tool-not-found': 'టూల్ కనుగొనబడలేదు',
+                'select-valid-tool': 'దయచేసి సైడ్‌బార్ నుండి చెల్లుబాటు అయ్యే AI టూల్‌ను ఎంచుకోండి.'
+            }
+        };
+
+        let currentLanguage = 'en'; // Default language
+
+        // Function to set the language
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('[data-lang-key]').forEach(element => {
+                const key = element.getAttribute('data-lang-key');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            // Reload the current tool UI so its text also updates
+            const currentCategory = document.querySelector('#category-list a.bg-blue-700')?.dataset.category || 'text-generation';
+            loadTool(currentCategory);
+        }
+
+        // Get DOM elements (these are now global as they are containers)
+        const categoryList = document.getElementById('category-list');
+        const toolTitle = document.getElementById('tool-title');
+        const toolDescription = document.getElementById('tool-description');
+        const toolInteractionArea = document.getElementById('tool-interaction-area');
+        const languageSelect = document.getElementById('language-select');
+
+        // Event listener for language selection change
+        languageSelect.addEventListener('change', (event) => {
+            setLanguage(event.target.value);
+        });
+
+        // Define tool data
+        const aiTools = {
+            'text-generation': {
+                titleKey: 'text-generation-category',
+                descriptionKey: 'text-generation-description',
+                placeholderInputKey: 'text-generation-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('text-generation', prompt);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['text-generation'].placeholderInputKey]}"></textarea>
+
+                            <button id="generate-button"
+                                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="generate-text-button">
+                                ${translations[currentLanguage]['generate-text-button']}
+                            </button>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['input-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['text-generation'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'image-generation': {
+                titleKey: 'image-generation-category',
+                descriptionKey: 'image-generation-description',
+                placeholderInputKey: 'image-generation-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('image-generation', prompt);
+                },
+                refinePromptFunction: async (prompt) => {
+                    return await callBackend('refine-image-prompt', prompt);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['image-generation'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="generate-image-button">
+                                    ${translations[currentLanguage]['generate-image-button']}
+                                </button>
+                                <button id="refine-prompt-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="refine-prompt-button">
+                                    ${translations[currentLanguage]['refine-prompt-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['image-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['image-prompt-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating-image']}</span></div>`;
+                        try {
+                            const imageUrl = await aiTools['image-generation'].apiFunction(prompt);
+                            outputElement.innerHTML = `<img src="${imageUrl}" alt="${translations[currentLanguage]['generated-image-alt']}" class="max-w-full h-auto rounded-lg shadow-md mt-4" onerror="this.onerror=null;this.src='https://placehold.co/400x300/333/FFF?text=${translations[currentLanguage]['image-load-error']}';" />`;
+                        } catch (error) {
+                            console.error("Error during image generation API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+
+                    document.getElementById('refine-prompt-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['prompt-refine-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['refining-prompt']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['image-generation'].refinePromptFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during prompt refinement API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'code-generation': {
+                titleKey: 'code-generation-category',
+                descriptionKey: 'code-generation-description',
+                placeholderInputKey: 'code-generation-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('code-generation', prompt);
+                },
+                explainCodeFunction: async (code) => {
+                    return await callBackend('explain-code', code);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['code-generation'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="generate-code-button">
+                                    ${translations[currentLanguage]['generate-code-button']}
+                                </button>
+                                <button id="explain-code-button"
+                                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75" data-lang-key="explain-code-button">
+                                    ${translations[currentLanguage]['explain-code-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['code-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['code-prompt-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating-code']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['code-generation'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during code generation API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+
+                    document.getElementById('explain-code-button').onclick = async () => {
+                        const code = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!code.trim()) { outputElement.textContent = translations[currentLanguage]['code-explain-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['explaining-code']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['code-generation'].explainCodeFunction(code);
+                        } catch (error) {
+                            console.error("Error during code explanation API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'speech-to-text': {
+                titleKey: 'speech-to-text-category',
+                descriptionKey: 'speech-to-text-description',
+                placeholderInputKey: 'speech-to-text-placeholder',
+                apiFunction: async (spokenText) => {
+                    return await callBackend('speech-to-text', spokenText);
+                },
+                // Custom UI rendering function for speech-to-text
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="simulated-mic-input">${translations[currentLanguage]['simulated-mic-input']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['speech-to-text'].placeholderInputKey]}"></textarea>
+
+                            <button id="record-button"
+                                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 flex items-center justify-center" data-lang-key="start-recording-button">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                ${translations[currentLanguage]['start-recording-button']}
+                            </button>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="transcription-output-label">${translations[currentLanguage]['transcription-output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['transcription-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Re-get elements after dynamic rendering
+                    const currentInputText = document.getElementById('input-text');
+                    const currentOutputText = document.getElementById('output-text');
+                    const recordButton = document.getElementById('record-button');
+
+                    let isRecording = false;
+
+                    recordButton.onclick = async () => {
+                        if (!isRecording) {
+                            // Start recording simulation
+                            isRecording = true;
+                            recordButton.textContent = translations[currentLanguage]['stop-recording-button'];
+                            recordButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                            recordButton.classList.add('bg-red-600', 'hover:bg-red-700');
+                            currentOutputText.textContent = translations[currentLanguage]['recording-message'];
+                            currentInputText.focus();
+                        } else {
+                            // Stop recording simulation and process
+                            isRecording = false;
+                            recordButton.textContent = translations[currentLanguage]['start-recording-button'];
+                            recordButton.classList.remove('bg-red-600', 'hover:bg-red-700');
+                            recordButton.classList.add('bg-green-600', 'hover:bg-green-700');
+
+                            const prompt = currentInputText.value;
+                            if (!prompt.trim()) {
+                                currentOutputText.textContent = translations[currentLanguage]['speech-input-required'];
+                                return;
+                            }
+
+                            currentOutputText.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['transcribing']}</span></div>`;
+
+                            try {
+                                const result = await aiTools['speech-to-text'].apiFunction(prompt);
+                                currentOutputText.innerHTML = result;
+                            } catch (error) {
+                                console.error("Error during speech-to-text API call:", error);
+                                currentOutputText.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                            }
+                        }
+                    };
+
+                    // Set initial placeholder
+                    currentInputText.placeholder = translations[currentLanguage][aiTools['speech-to-text'].placeholderInputKey];
+                    currentOutputText.textContent = translations[currentLanguage]['transcription-output-placeholder'];
+                }
+            },
+            'text-to-speech': {
+                titleKey: 'text-to-speech-category',
+                descriptionKey: 'text-to-speech-description',
+                placeholderInputKey: 'text-to-speech-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('text-to-speech', prompt);
+                },
+                suggestToneFunction: async (text) => {
+                    return await callBackend('suggest-tone', text);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['text-to-speech'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="generate-speech-button">
+                                    ${translations[currentLanguage]['generate-speech-button']}
+                                </button>
+                                <button id="suggest-tone-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="suggest-tone-button">
+                                    ${translations[currentLanguage]['suggest-tone-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['speech-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['speech-text-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating-speech']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['text-to-speech'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('suggest-tone-button').onclick = async () => {
+                        const text = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!text.trim()) { outputElement.textContent = translations[currentLanguage]['tone-suggestion-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['suggesting-tone']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['text-to-speech'].suggestToneFunction(text);
+                        } catch (error) {
+                            console.error("Error during tone suggestion API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'data-analysis': {
+                titleKey: 'data-analysis-category',
+                descriptionKey: 'data-analysis-description',
+                placeholderInputKey: 'data-analysis-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('data-analysis', prompt);
+                },
+                generateReportSummaryFunction: async (data) => {
+                    return await callBackend('generate-report-summary', data);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['data-analysis'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="analyze-data-button">
+                                    ${translations[currentLanguage]['analyze-data-button']}
+                                </button>
+                                <button id="generate-report-summary-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="generate-report-summary-button">
+                                    ${translations[currentLanguage]['generate-report-summary-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['data-analysis-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['data-analysis-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['analyzing-data']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['data-analysis'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('generate-report-summary-button').onclick = async () => {
+                        const data = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!data.trim()) { outputElement.textContent = translations[currentLanguage]['report-summary-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating-report-summary']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['data-analysis'].generateReportSummaryFunction(data);
+                        } catch (error) {
+                            console.error("Error during report summary API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'translation': {
+                titleKey: 'translation-category',
+                descriptionKey: 'translation-description',
+                placeholderInputKey: 'translation-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('translation', prompt);
+                },
+                detectLanguageFunction: async (text) => {
+                    return await callBackend('detect-language', text);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['translation'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="translate-text-button">
+                                    ${translations[currentLanguage]['translate-text-button']}
+                                </button>
+                                <button id="detect-language-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="detect-language-button">
+                                    ${translations[currentLanguage]['detect-language-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['translation-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['translation-text-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['translating']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['translation'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('detect-language-button').onclick = async () => {
+                        const text = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!text.trim()) { outputElement.textContent = translations[currentLanguage]['language-detection-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['detecting-language']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['translation'].detectLanguageFunction(text);
+                        } catch (error) {
+                            console.error("Error during language detection API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'summarization': {
+                titleKey: 'summarization-category',
+                descriptionKey: 'summarization-description',
+                placeholderInputKey: 'summarization-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('summarization', prompt);
+                },
+                extractKeywordsFunction: async (text) => {
+                    return await callBackend('extract-keywords', text);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['summarization'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="summarize-text-button">
+                                    ${translations[currentLanguage]['summarize-text-button']}
+                                </button>
+                                <button id="extract-keywords-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="extract-keywords-button">
+                                    ${translations[currentLanguage]['extract-keywords-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['summary-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['summarization-text-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['summarizing']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['summarization'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('extract-keywords-button').onclick = async () => {
+                        const text = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!text.trim()) { outputElement.textContent = translations[currentLanguage]['keywords-extraction-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['extracting-keywords']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['summarization'].extractKeywordsFunction(text);
+                        } catch (error) {
+                            console.error("Error during keyword extraction API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'chatbot': {
+                titleKey: 'chatbot-category',
+                descriptionKey: 'chatbot-description',
+                placeholderInputKey: 'chatbot-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('chatbot', prompt);
+                },
+                summarizeConversationFunction: async (conversationSnippet) => {
+                    return await callBackend('summarize-conversation', conversationSnippet);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="chat-with-ai-label">${translations[currentLanguage]['chat-with-ai-label']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['chatbot'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="send-message-button">
+                                    ${translations[currentLanguage]['send-message-button']}
+                                </button>
+                                <button id="summarize-conversation-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="summarize-conversation-button">
+                                    ${translations[currentLanguage]['summarize-conversation-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['chatbot-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['chatbot-message-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['thinking']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['chatbot'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('summarize-conversation-button').onclick = async () => {
+                        const conversationSnippet = document.getElementById('input-text').value; // For demo, summarize current input
+                        const outputElement = document.getElementById('output-text');
+                        if (!conversationSnippet.trim()) { outputElement.textContent = translations[currentLanguage]['conversation-summary-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['summarizing-conversation']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['chatbot'].summarizeConversationFunction(conversationSnippet);
+                        } catch (error) {
+                            console.error("Error during conversation summary API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'object-detection': {
+                titleKey: 'object-detection-category',
+                descriptionKey: 'object-detection-description',
+                placeholderInputKey: 'object-detection-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('object-detection', prompt);
+                },
+                imageCaptioningFunction: async (imageDescription) => {
+                    return await callBackend('image-captioning', imageDescription);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="describe-image-label">${translations[currentLanguage]['describe-image-label']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['object-detection'].placeholderInputKey]}"></textarea>
+
+                            <div class="flex space-x-4 mb-4">
+                                <button id="generate-button"
+                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="detect-objects-button">
+                                    ${translations[currentLanguage]['detect-objects-button']}
+                                </button>
+                                <button id="image-captioning-button"
+                                        class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75" data-lang-key="image-captioning-button">
+                                    ${translations[currentLanguage]['image-captioning-button']}
+                                </button>
+                            </div>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['object-detection-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('generate-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['object-detection-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['detecting-objects']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['object-detection'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                    document.getElementById('image-captioning-button').onclick = async () => {
+                        const imageDescription = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!imageDescription.trim()) { outputElement.textContent = translations[currentLanguage]['image-captioning-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating-image-caption']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['object-detection'].imageCaptioningFunction(imageDescription);
+                        } catch (error) {
+                            console.error("Error during image captioning API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            },
+            'idea-brainstormer': {
+                titleKey: 'idea-brainstormer-category',
+                descriptionKey: 'idea-brainstormer-description',
+                placeholderInputKey: 'idea-brainstormer-placeholder',
+                apiFunction: async (prompt) => {
+                    return await callBackend('idea-brainstormer', prompt);
+                },
+                renderUI: (toolInteractionArea) => {
+                    toolInteractionArea.innerHTML = `
+                        <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                            <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-topic-label">${translations[currentLanguage]['enter-topic-label']}</label>
+                            <textarea id="input-text"
+                                      class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                                      placeholder="${translations[currentLanguage][aiTools['idea-brainstormer'].placeholderInputKey]}"></textarea>
+
+                            <button id="brainstorm-button"
+                                    class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-75" data-lang-key="brainstorm-ideas-button">
+                                ${translations[currentLanguage]['brainstorm-ideas-button']}
+                            </button>
+
+                            <div class="mt-6">
+                                <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                                <div id="output-text"
+                                     class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                                    ${translations[currentLanguage]['brainstorm-output-placeholder']}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('brainstorm-button').onclick = async () => {
+                        const prompt = document.getElementById('input-text').value;
+                        const outputElement = document.getElementById('output-text');
+                        if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['brainstorm-topic-required']; return; }
+                        outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['brainstorming']}</span></div>`;
+                        try {
+                            outputElement.innerHTML = await aiTools['idea-brainstormer'].apiFunction(prompt);
+                        } catch (error) {
+                            console.error("Error during API call:", error);
+                            outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                        }
+                    };
+                }
+            }
+        };
+
+        // Custom renderUI function for tools without a specific UI
+        function renderGenericUI(toolCategory) {
+            const tool = aiTools[toolCategory];
+            toolInteractionArea.innerHTML = `
+                <div class="bg-[#333] p-6 rounded-lg shadow-inner flex-grow flex flex-col">
+                    <label for="input-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="enter-prompt">${translations[currentLanguage]['enter-prompt']}</label>
+                    <textarea id="input-text"
+                              class="w-full h-32 p-3 bg-[#444] text-white rounded-md border border-[#555] focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y mb-4"
+                              placeholder="${translations[currentLanguage][tool.placeholderInputKey]}"></textarea>
+
+                    <button id="generate-button"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out shadow-lg transform hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75" data-lang-key="generate-button">
+                        ${translations[currentLanguage]['generate-button']}
+                    </button>
+
+                    <div class="mt-6">
+                        <label for="output-text" class="block text-gray-300 text-sm font-medium mb-2" data-lang-key="output-label">${translations[currentLanguage]['output-label']}</label>
+                        <div id="output-text"
+                             class="w-full min-h-[100px] p-3 bg-[#444] text-white rounded-md border border-[#555] overflow-auto whitespace-pre-wrap">
+                            ${translations[currentLanguage]['output-placeholder']}
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Attach event listener for the generic generate button
+            document.getElementById('generate-button').onclick = async () => {
+                const prompt = document.getElementById('input-text').value;
+                const outputElement = document.getElementById('output-text');
+                if (!prompt.trim()) { outputElement.textContent = translations[currentLanguage]['input-required']; return; }
+                outputElement.innerHTML = `<div class="flex items-center justify-center"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div><span class="ml-3 text-gray-400">${translations[currentLanguage]['generating']}</span></div>`;
+                try {
+                    outputElement.innerHTML = await tool.apiFunction(prompt);
+                } catch (error) {
+                    console.error("API కాల్ సమయంలో లోపం:", error);
+                    outputElement.textContent = `${translations[currentLanguage]['error-occurred']}${error.message}`;
+                }
+            };
+        }
+
+        // Function to update the main content area based on the selected tool
+        function loadTool(category) {
+            const tool = aiTools[category];
+            if (tool) {
+                toolTitle.textContent = translations[currentLanguage][tool.titleKey];
+                toolDescription.textContent = translations[currentLanguage][tool.descriptionKey];
+
+                // Clear previous UI
+                toolInteractionArea.innerHTML = '';
+
+                // Render specific UI if defined, otherwise render generic UI
+                if (tool.renderUI) {
+                    tool.renderUI(toolInteractionArea);
+                } else {
+                    renderGenericUI(category);
+                }
+
+                // Update active category in sidebar
+                document.querySelectorAll('#category-list a').forEach(link => {
+                    link.classList.remove('bg-blue-700', 'text-white');
+                    link.classList.add('text-gray-300', 'hover:bg-[#333]');
+                });
+                document.querySelector(`[data-category="${category}"]`).classList.add('bg-blue-700', 'text-white');
+                document.querySelector(`[data-category="${category}"]`).classList.remove('text-gray-300', 'hover:bg-[#333]');
+
+            } else {
+                toolTitle.textContent = translations[currentLanguage]['tool-not-found'];
+                toolDescription.textContent = translations[currentLanguage]['select-valid-tool'];
+                toolInteractionArea.innerHTML = ''; // Clear interaction area
+                renderGenericUI('text-generation'); // Fallback to a default generic UI
+            }
+        }
+
+        // Event listener for category clicks
+        categoryList.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            const target = event.target.closest('a'); // Get the closest 'a' tag
+            if (target && target.dataset.category) {
+                loadTool(target.dataset.category);
+            }
+        });
+
+        // Load default tool when page loads
+        window.onload = () => {
+            setLanguage('en'); // Set English initially
+            languageSelect.value = 'en'; // Also set the dropdown to English
+            loadTool('text-generation');
+        };
+    </script>
+</body>
+</html>
